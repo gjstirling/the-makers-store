@@ -54,12 +54,33 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     }
 
     "raise error if item already exists" in {
-
+      val mockDbAdapter = mock[DbAdapterBase]
+      val items = ArrayBuffer(item1)
+      val itemsController = new ItemsController(mockDbAdapter)
+      (mockDbAdapter.getItems _).expects().returns(items)
+      val thrownError = the [Exception] thrownBy {itemsController.createItem(item1)}
+      thrownError.getMessage should equal("Error: Duplicated Item id")
     }
-
   }
 
-//  "ItemsController.deleteItem" should {}
+  "ItemsController.deleteItem" should {
+    "Delete an item" in {
+      val mockDbAdapter = mock[DbAdapterBase]
+      val items = ArrayBuffer(item1, item2)
+      val itemsController = new ItemsController(mockDbAdapter)
+      (mockDbAdapter.getItems _).expects().returns(items)
+      itemsController.deleteItemById(1) should equal()
+    }
+
+    "Raise an error if id is invalid" in {
+      val mockDbAdapter = mock[DbAdapterBase]
+      val items = ArrayBuffer(item1)
+      val itemsController = new ItemsController(mockDbAdapter)
+      (mockDbAdapter.getItems _).expects().returns(items)
+      val thrownError = the [Exception] thrownBy {itemsController.deleteItemById(2)}
+      thrownError.getMessage should equal("Error: Item id is invalid")
+    }
+  }
 }
 
 

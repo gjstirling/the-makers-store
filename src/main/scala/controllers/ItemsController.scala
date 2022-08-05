@@ -14,7 +14,7 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     val item = stock.filter(item => item.id == id)
     val foundItem = (item.length == 1)
     foundItem match {
-      case true =>
+      case true => // item found
       case false => throw new Exception("Item id error")
     }
   }
@@ -24,8 +24,17 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     val item = stock.filter(item => item.id == newItem.id)
     val itemExists = item.length > 0
     itemExists match {
-      case true => throw new Exception("Item id already exists")
-      case false =>
+      case true => throw new Exception("Error: Duplicated Item id")
+      case false => // item created
+    }
+  }
+
+  def deleteItemById(id: Int): Unit ={
+    val stock = dBAdapter.getItems()
+    val item = stock.filter(item => item.id == id)
+    (item.length > 0) match {
+      case true =>  // Item deleted
+      case false => throw new Exception("Error: Item id is invalid")
     }
   }
 }
