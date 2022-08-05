@@ -25,7 +25,9 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     val itemExists = item.length > 0
     itemExists match {
       case true => throw new Exception("Error: Duplicated Item id")
-      case false => // item created
+      case false => {
+        dBAdapter.createItem(newItem)
+      }
     }
   }
 

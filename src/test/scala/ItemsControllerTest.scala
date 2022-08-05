@@ -49,8 +49,10 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1)
       val itemsController = new ItemsController(mockDbAdapter)
+      // Need feedback on this test. False Positive ?
       (mockDbAdapter.getItems _).expects().returns(items)
-      itemsController.createItem(item2) should equal()
+      (mockDbAdapter.createItem _).expects(item2).returns()
+      itemsController.createItem(item2) shouldEqual ()
     }
 
     "raise error if item already exists" in {
