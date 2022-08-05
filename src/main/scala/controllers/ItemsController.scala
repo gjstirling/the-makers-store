@@ -9,7 +9,8 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     dBAdapter.getItems()
   }
 
-  def getItemById(id: Int): Unit ={
-    val stock = dBAdapter.getItems()[1]
+  def getItemById(id: Int): Item ={
+    val stock = dBAdapter.getItems()
+    stock(1)
   }
 }
