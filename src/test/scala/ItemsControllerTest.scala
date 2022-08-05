@@ -30,7 +30,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       val itemsController = new ItemsController(mockDbAdapter)
 
       (mockDbAdapter.getItems _).expects().returns(items)
-      itemsController.getItemById(2) should equal(item2)
+      itemsController.getItemById(2) should equal()
     }
 
     "Raises an error if item id doesn't exist" in {
@@ -43,6 +43,23 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       thrownError.getMessage should equal("Item id error")
     }
   }
+
+  "ItemsController.createItem" should {
+    "Create a new item" in {
+      val mockDbAdapter = mock[DbAdapterBase]
+      val items = ArrayBuffer(item1)
+      val itemsController = new ItemsController(mockDbAdapter)
+      (mockDbAdapter.getItems _).expects().returns(items)
+      itemsController.createItem(item2) should equal()
+    }
+
+    "raise error if item already exists" in {
+
+    }
+
+  }
+
+//  "ItemsController.deleteItem" should {}
 }
 
 

@@ -9,13 +9,23 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     dBAdapter.getItems()
   }
 
-  def getItemById(id: Int): Item ={
+  def getItemById(id: Int): Unit ={
     val stock = dBAdapter.getItems()
     val item = stock.filter(item => item.id == id)
     val foundItem = (item.length == 1)
     foundItem match {
-      case true => item(0)
+      case true =>
       case false => throw new Exception("Item id error")
+    }
+  }
+
+  def createItem(newItem: Item): Unit ={
+    val stock = dBAdapter.getItems()
+    val item = stock.filter(item => item.id == newItem.id)
+    val itemExists = item.length > 0
+    itemExists match {
+      case true => throw new Exception("Item id already exists")
+      case false =>
     }
   }
 }
