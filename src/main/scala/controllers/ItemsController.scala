@@ -11,6 +11,10 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
 
   def getItemById(id: Int): Item ={
     val stock = dBAdapter.getItems()
-    stock(1)
+    val item = stock.filter(item => item.id == id)
+    val foundItem = (item.length == 1)
+    foundItem match {
+      case true => item(0)
+    }
   }
 }
