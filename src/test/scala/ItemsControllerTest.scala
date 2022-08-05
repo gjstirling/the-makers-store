@@ -7,13 +7,14 @@ import org.scalatest.wordspec.AnyWordSpec
 import scala.collection.mutable.ArrayBuffer
 
 class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
+
+  val item1 = new Item(1, "Delicious Soup", 4.5, 15, List("NA", "EU"))
+  val item2 = new Item(2, "Lovely Apple", 1.0, 4, List("NA", "EU"))
+
   "ItemsController.getAll" should {
     "Return an ArrayBuffer of items" in {
       val mockDbAdapter = mock[DbAdapterBase]
-      val items = ArrayBuffer(
-        new Item(1, "Delicious Soup", 4.5, 15, List("NA", "EU")),
-        new Item(2, "Lovely Apple", 1.0, 4, List("NA", "EU"))
-      )
+      val items = ArrayBuffer(item1, item2)
       val itemsController = new ItemsController(mockDbAdapter)
 
       (mockDbAdapter.getItems _).expects().returns(items)
@@ -25,13 +26,21 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
   "ItemsController.getItemById" should {
     "Return a single item" in {
       val mockDbAdapter = mock[DbAdapterBase]
-      val item1 = new Item(1, "Delicious Soup", 4.5, 15, List("NA", "EU"))
-      val item2 = new Item(2, "Lovely Apple", 1.0, 4, List("NA", "EU"))
       val items = ArrayBuffer(item1, item2)
       val itemsController = new ItemsController(mockDbAdapter)
 
       (mockDbAdapter.getItems _).expects().returns(items)
       itemsController.getItemById(2) should equal(item2)
+    }
+
+    "Raises an error if item id doesn't exist" in {
+      val mockDbAdapter = mock[DbAdapterBase]
+      val items = ArrayBuffer(item1)
+      val itemsController = new ItemsController(mockDbAdapter)
+      (mockDbAdapter.getItems _).expects().returns(items)
+
+      val thrownError = the [Exception] thrownBy {itemsController.getItemById(2)}
+      thrownError.getMessage should equal("Item id error")
     }
   }
 }
