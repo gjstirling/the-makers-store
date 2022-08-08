@@ -69,10 +69,26 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
   }
 
   // UPDATE Routes:
-//  "Can update an item" in {
-//    val item1 = new Item(1, "Delicious Soup", 4.5, 15, List("NA", "EU"))
-//  }
+  "Can update an item" in {
+    val mockDbAdapter = mock[DbAdapterBase]
+    val itemsController = new ItemsController(mockDbAdapter)
+    val items = ArrayBuffer(item1)
+    (mockDbAdapter.getItems _).expects().returns(items)
 
+    val result = itemsController.updateItemById(1, Option("Average Soup"), Option(2.5), Option(10), Option(List("NA")))
+    result.name shouldBe "Average Soup"
+    result.price shouldBe 2.5
+    result.quantity shouldBe 10
+    result.availableLocales shouldBe List("NA")
+  }
+
+  "Can update single attributes of an item" in {
+    val mockDbAdapter = mock[DbAdapterBase]
+    val itemsController = new ItemsController(mockDbAdapter)
+    val items = ArrayBuffer(item1)
+    (mockDbAdapter.getItems _).expects().returns(items)
+    itemsController.updateItemById(1, name = Option("Average Soup")).name shouldBe "Average Soup"
+  }
 
   // DELETE Routes:
   "ItemsController.deleteItem" should {
