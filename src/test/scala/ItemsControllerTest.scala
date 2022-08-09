@@ -10,7 +10,8 @@ import scala.collection.mutable.ArrayBuffer
 class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
 
   val item1 = new Item(1, "Delicious Soup", 4.5, 15, List("NA", "EU"))
-  val item2 = new Item(2, "Lovely Apple", 1.0, 4, List("NA"))
+  val item2 = new Item(2, "Lovely American Apple", 1.0, 4, List("NA"))
+
   val allLocationsMock = mutable.LinkedHashMap(
     "EU" -> mutable.LinkedHashMap(
       "UK" -> Seq(
@@ -136,7 +137,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
   }
 
   //  Fetch all Items available in a particular Location (either by name or id)
-  "ItemsController.findItemLocation" should {
+  "ItemsController.getItemsByLocationId" should {
     "Return a list of items based on a location id" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1, item2)
@@ -145,7 +146,19 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       val itemsController = new ItemsController(mockDbAdapter)
       itemsController.getItemsByLocationId(2) should equal(ArrayBuffer(item1))
     }
+
+    "Returns error if location id is invalid" in {
+      val mockDbAdapter = mock[DbAdapterBase]
+      val itemsController = new ItemsController(mockDbAdapter)
+      (mockDbAdapter.getLocations _).expects().returns(allLocationsMock)
+      val thrownError = the[Exception] thrownBy {
+        itemsController.getItemsByLocationId(11)
+      }
+      thrownError.getMessage should equal("Error: Location id doesn't exist")
+    }
   }
+
+
 }
 
 

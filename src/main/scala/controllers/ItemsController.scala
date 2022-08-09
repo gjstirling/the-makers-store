@@ -1,6 +1,7 @@
 import main.db.{DbAdapter, DbAdapterBase}
-import main.model.Item
+import main.model.{Item, Location}
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
@@ -80,8 +81,15 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
   }
 
   private def getContinentByLocationId(id: Int): String ={
-    dBAdapter.getLocations()
-    "EU"
+    val continents = dBAdapter.getLocations()
+    continents.find((continent) => continent._2.values.exists(
+      country => country.exists(
+        location => location.id == id
+      )
+    )) match {
+      case Some(result) => result._1
+      case None => throw new Exception("Error: Location id doesn't exist")
+    }
   }
 }
 
