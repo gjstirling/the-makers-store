@@ -1,5 +1,5 @@
 import main.db.DbAdapterBase
-import main.model.{Item, Location}
+import main.model.{Item}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -110,6 +110,14 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
+//  Fetch all Items available in a particular Location (either by name or id)
+
+  def itemsByLocationId(id: Int): Unit ={
+
+  }
+
+
+//  Fetch all Locations in a given continent (i.e. "NA", "EU")
 
 }
 

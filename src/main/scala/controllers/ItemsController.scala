@@ -41,19 +41,19 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
   : Item = {
     val itemToUpdate = getItemById(id)
     val nameUpdate = name match {
-      case Some(newName) => newName
+      case Some(nameChange) => nameChange
       case None => itemToUpdate.name
     }
     val priceUpdate = price match {
-      case Some(newPrice) => newPrice
+      case Some(priceChange) => priceChange
       case None => itemToUpdate.price
     }
     val quantityUpdate = quantity match {
-      case Some(newQuantity) => newQuantity
+      case Some(quantityChange) => quantityChange
       case None => itemToUpdate.quantity
     }
     val availableLocalesUpdate = availableLocales match {
-      case Some(newLocales) => newLocales
+      case Some(localeChange) => localeChange
       case None => itemToUpdate.availableLocales
     }
     val itemUpdate = new Item(id, nameUpdate, priceUpdate, quantityUpdate, availableLocalesUpdate)
