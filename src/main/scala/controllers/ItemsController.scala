@@ -19,6 +19,15 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     }
   }
 
+  def getItemsByLocationId(id: Int): ArrayBuffer[Item] ={
+    val continent = getContinentByLocationId(id)
+    val items = getAllItems()
+    val filteredItems = items.filter(item => {
+      item.availableLocales.contains(continent)
+    })
+    filteredItems
+  }
+
   def createItem(newItem: Item): Unit = {
     val stock = dBAdapter.getItems()
     val item = stock.filter(item => item.id == newItem.id)
@@ -68,6 +77,11 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
       case true => // Item deleted
       case false => throw new Exception("Error: Item id is invalid")
     }
+  }
+
+  private def getContinentByLocationId(id: Int): String ={
+    dBAdapter.getLocations()
+    "EU"
   }
 }
 

@@ -1,15 +1,34 @@
 import main.db.DbAdapterBase
-import main.model.{Item}
+import main.model.{Item, Location}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
 
   val item1 = new Item(1, "Delicious Soup", 4.5, 15, List("NA", "EU"))
-  val item2 = new Item(2, "Lovely Apple", 1.0, 4, List("EU"))
+  val item2 = new Item(2, "Lovely Apple", 1.0, 4, List("NA"))
+  val allLocationsMock = mutable.LinkedHashMap(
+    "EU" -> mutable.LinkedHashMap(
+      "UK" -> Seq(
+        new Location(1, "Glasgow"),
+        new Location(2, "Edinburgh")
+        )
+    ),
+    "NA" -> mutable.LinkedHashMap(
+      "CA" -> Seq(
+        new Location(3, "Vancouver"),
+        new Location(4, "Toronto"),
+      ),
+      "US" -> Seq(
+        new Location(5, "New York"),
+        new Location(6, "Chicago"),
+      )
+    )
+  )
 
   // CREATE routes:
   // returning a Unit confirms this is behaving correctly ? As only other return is a raised exception
@@ -21,7 +40,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
 
       (mockDbAdapter.getItems _).expects().returns(items)
       (mockDbAdapter.createItem _).expects(item2).returns()
-      itemsController.createItem(item2) shouldEqual ()
+      itemsController.createItem(item2) shouldEqual()
     }
 
     "raise error if item already exists" in {
@@ -29,12 +48,14 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       val items = ArrayBuffer(item1)
       val itemsController = new ItemsController(mockDbAdapter)
       (mockDbAdapter.getItems _).expects().returns(items)
-      val thrownError = the [Exception] thrownBy {itemsController.createItem(item1)}
+      val thrownError = the[Exception] thrownBy {
+        itemsController.createItem(item1)
+      }
       thrownError.getMessage should equal("Error: Duplicated Item id")
     }
   }
 
-// GET route tests:
+  // GET route tests:
   "ItemsController.getAll" should {
     "Return an ArrayBuffer of items" in {
       val mockDbAdapter = mock[DbAdapterBase]
@@ -63,7 +84,9 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       val itemsController = new ItemsController(mockDbAdapter)
       (mockDbAdapter.getItems _).expects().returns(items)
 
-      val thrownError = the [Exception] thrownBy {itemsController.getItemById(2)}
+      val thrownError = the[Exception] thrownBy {
+        itemsController.getItemById(2)
+      }
       thrownError.getMessage should equal("Item id error")
     }
   }
@@ -105,20 +128,24 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
       val items = ArrayBuffer(item1)
       val itemsController = new ItemsController(mockDbAdapter)
       (mockDbAdapter.getItems _).expects().returns(items)
-      val thrownError = the [Exception] thrownBy {itemsController.deleteItemById(2)}
+      val thrownError = the[Exception] thrownBy {
+        itemsController.deleteItemById(2)
+      }
       thrownError.getMessage should equal("Error: Item id is invalid")
     }
   }
 
-//  Fetch all Items available in a particular Location (either by name or id)
-
-  def itemsByLocationId(id: Int): Unit ={
-
+  //  Fetch all Items available in a particular Location (either by name or id)
+  "ItemsController.findItemLocation" should {
+    "Return a list of items based on a location id" in {
+      val mockDbAdapter = mock[DbAdapterBase]
+      val items = ArrayBuffer(item1, item2)
+      (mockDbAdapter.getLocations _).expects().returns(allLocationsMock)
+      (mockDbAdapter.getItems _).expects().returns(items)
+      val itemsController = new ItemsController(mockDbAdapter)
+      itemsController.getItemsByLocationId(2) should equal(ArrayBuffer(item1))
+    }
   }
-
-
-//  Fetch all Locations in a given continent (i.e. "NA", "EU")
-
 }
 
 
