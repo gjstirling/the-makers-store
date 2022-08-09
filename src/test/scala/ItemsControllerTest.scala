@@ -158,7 +158,6 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-
 }
 
 
