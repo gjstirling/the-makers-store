@@ -31,9 +31,10 @@ class LocationsControllerTest extends AnyWordSpec with Matchers with MockFactory
   "LocationsController.getLocationsFromContinent" should {
     "Return a list of locations within the continent" in {
       val mockDbAdapter = mock[DbAdapterBase]
+      (mockDbAdapter.getLocations _).expects().returns(allLocationsMock)
       val locationController = new LocationsController(mockDbAdapter)
       val result = locationController.getLocationsFromContinent("NA")
-      result should equal(ArrayBuffer(vancouver, toronto, newYork, chicago))
+      result should equal(ArrayBuffer(List(vancouver, toronto), List(newYork, chicago)))
     }
 
   }
