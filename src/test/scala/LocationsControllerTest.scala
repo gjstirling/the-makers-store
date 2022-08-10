@@ -9,7 +9,8 @@ import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 class LocationsControllerTest extends AnyWordSpec with Matchers with MockFactory {
-
+  val glasgow = new Location(1, "Glasgow")
+  val edinburgh = new Location(2, "Edinburgh")
   val vancouver = new Location(3, "Vancouver")
   val toronto = new Location(4, "Toronto")
   val newYork = new Location(5, "New York")
@@ -17,10 +18,7 @@ class LocationsControllerTest extends AnyWordSpec with Matchers with MockFactory
 
   val allLocationsMock = mutable.LinkedHashMap(
     "EU" -> mutable.LinkedHashMap(
-      "UK" -> Seq(
-        new Location(1, "Glasgow"),
-        new Location(2, "Edinburgh")
-      )
+      "UK" -> Seq(glasgow, edinburgh)
     ),
     "NA" -> mutable.LinkedHashMap(
       "CA" -> Seq(vancouver, toronto),
@@ -34,8 +32,8 @@ class LocationsControllerTest extends AnyWordSpec with Matchers with MockFactory
       (mockDbAdapter.getLocations _).expects().returns(allLocationsMock)
       val locationController = new LocationsController(mockDbAdapter)
       val result = locationController.getLocationsFromContinent("NA")
-      result should equal(ArrayBuffer(List(vancouver, toronto), List(newYork, chicago)))
+      result should equal(mutable.Iterable(vancouver, toronto, newYork, chicago))
     }
-
   }
+
 }
