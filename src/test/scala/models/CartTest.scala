@@ -36,4 +36,13 @@ class CartTest extends AnyWordSpec with Matchers with MockFactory {
       subject.items.length shouldBe 0
     }
   }
+
+  "Cart.removeItemById should" should {
+    "Remove an item stored inside the cart matching the id argument" in {
+      val subject = new Cart(items = ArrayBuffer(apple, coffee))
+      subject.removeItemById(2)
+      subject.items.length shouldBe 1
+      subject.items(0).name shouldBe "apple"
+    }
+  }
 }

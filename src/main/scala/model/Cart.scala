@@ -8,13 +8,35 @@ class Cart (val uuid: String = UuidGenerator.create(),
             val dBAdapter: DbAdapterBase = DbAdapter,
             val items: ArrayBuffer[Item] = ArrayBuffer()) {
 
-    def addItem(item: Item): Unit ={
+
+    //    A Cart allows us to add an item to our cart,
+    //TO ADD:
+    //    assuming we still have enough quantity in stock
+    //      and it's available in the city we're in
+    def addItem(item: Item): Unit = {
         items.append(item)
     }
 
-    def clearCart(): Unit ={
+    //    Cart also allows us to clear its contents entirely,
+    def clearCart(): Unit = {
         items.clear()
     }
+
+    //    or remove a particular item
+        def removeItemById(itemId: Int): Unit ={
+
+        }
+
+
+    //    We can change the quantity of an item already in our cart,
+    //    so long as the new quantity is in stock
+    // def updateQuantityOfItem(itemId: Int){}
+
+
+//    We should have two functions onPaymentSuccess and onPaymentFailed.
+//    A failed payment should clear the cart,
+//    while a successful payment should update our inventory
+//    to subtract the recently sold stock.
 
 }
 
