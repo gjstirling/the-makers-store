@@ -1,4 +1,5 @@
-import model.{Cart, UuidFactory}
+package factories
+
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

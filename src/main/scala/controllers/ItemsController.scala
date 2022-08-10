@@ -1,7 +1,5 @@
 import main.db.{DbAdapter, DbAdapterBase}
-import main.model.{Item, Location}
-
-import scala.collection.mutable
+import main.model.{Item}
 import scala.collection.mutable.ArrayBuffer
 
 class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
@@ -80,6 +78,7 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     }
   }
 
+  // This needs to be moved into a "Helper or services" folder
   private def getContinentByLocationId(id: Int): String ={
     val continents = dBAdapter.getLocations()
     continents.find((continent) => continent._2.values.exists(

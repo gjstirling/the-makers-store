@@ -1,4 +1,5 @@
-package model
+package factories
+
 import java.util.UUID;
 
 trait FactoryBase[T] {

@@ -6,7 +6,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 
 class LocationsControllerTest extends AnyWordSpec with Matchers with MockFactory {
   val glasgow = new Location(1, "Glasgow")
