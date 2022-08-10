@@ -44,5 +44,13 @@ class CartTest extends AnyWordSpec with Matchers with MockFactory {
       subject.items.length shouldBe 1
       subject.items(0).name shouldBe "apple"
     }
+
+    "Raise an error if itemId isn't in the cart" in {
+      val subject = new Cart(items = ArrayBuffer(apple, coffee))
+      val thrownError = the[Exception] thrownBy {
+        subject.removeItemById(3)
+      }
+      thrownError.getMessage should equal("Error: ItemId not in cart")
+    }
   }
 }

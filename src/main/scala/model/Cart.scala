@@ -24,7 +24,11 @@ class Cart (val uuid: String = UuidGenerator.create(),
 
     //    or remove a particular item
         def removeItemById(itemId: Int): Unit ={
+            val itemsInCart = items.length
             items = items.filter(item => item.id != itemId )
+            if (itemsInCart == items.length){
+                throw new Exception("Error: ItemId not in cart")
+            }
         }
 
 
