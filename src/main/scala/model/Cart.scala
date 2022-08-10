@@ -23,13 +23,23 @@ class Cart (val uuid: String = UuidGenerator.create(),
     }
 
     //    or remove a particular item
-        def removeItemById(itemId: Int): Unit ={
-            val itemsInCart = items.length
-            items = items.filter(item => item.id != itemId )
-            if (itemsInCart == items.length){
-                throw new Exception("Error: ItemId not in cart")
+        def removeItemById(itemId: Int): Unit = {
+            val filteredCart = items.filter(item => item.id != itemId)
+            (filteredCart.length == items.length) match {
+                case true => {
+                    throw new Exception("Error: ItemId not in cart")
+                }
+                case _ => {items = filteredCart}
             }
         }
+
+//    val itemExists = item.length > 0
+//    itemExists match {
+//        case false => {
+//            dBAdapter.createItem(newItem)
+//        }
+//        case _ => throw new Exception("Error: Duplicated Item id")
+//    }
 
 
     //    We can change the quantity of an item already in our cart,
