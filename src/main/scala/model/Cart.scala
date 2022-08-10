@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class Cart (val uuid: String = UuidGenerator.create(),
             val dBAdapter: DbAdapterBase = DbAdapter,
-            val items: ArrayBuffer[Item] = ArrayBuffer()) {
+            var items: ArrayBuffer[Item] = ArrayBuffer()) {
 
 
     //    A Cart allows us to add an item to our cart,
@@ -24,7 +24,7 @@ class Cart (val uuid: String = UuidGenerator.create(),
 
     //    or remove a particular item
         def removeItemById(itemId: Int): Unit ={
-
+            items = items.filter(item => item.id != itemId )
         }
 
 
