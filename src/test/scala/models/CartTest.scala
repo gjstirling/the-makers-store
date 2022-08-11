@@ -1,11 +1,9 @@
 package models
-
 import main.model.Item
 import model.{Cart, Order}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-
 import scala.collection.mutable.ArrayBuffer
 
 class CartTest extends AnyWordSpec with Matchers with MockFactory {

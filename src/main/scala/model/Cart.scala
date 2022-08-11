@@ -11,6 +11,7 @@ class Cart (val uuid: String = UuidGenerator.create(),
     //    assuming we still have enough quantity in stock
     //      and it's available in the city we're in
     def addItem(item: Item): Unit = {
+
         order.items.append(item)
     }
 
