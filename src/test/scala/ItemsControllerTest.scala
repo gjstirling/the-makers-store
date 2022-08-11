@@ -136,7 +136,6 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-  //  Fetch all Items available in a particular Location (either by name or id)
   "ItemsController.getItemsByLocationId" should {
     "Return a list of items based on a location id" in {
       val mockDbAdapter = mock[DbAdapterBase]
@@ -150,11 +149,14 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     "Returns error if location id is invalid" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val itemsController = new ItemsController(mockDbAdapter)
+      val items = ArrayBuffer(item1, item2)
       (mockDbAdapter.getLocations _).expects().returns(allLocationsMock)
+      (mockDbAdapter.getItems _).expects().returns(items)
+
       val thrownError = the[Exception] thrownBy {
         itemsController.getItemsByLocationId(11)
       }
-      thrownError.getMessage should equal("Error: Location id doesn't exist")
+      thrownError.getMessage should equal("Error: Location Id doesn't exist")
     }
   }
 

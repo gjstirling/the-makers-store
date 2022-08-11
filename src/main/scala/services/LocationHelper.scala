@@ -1,6 +1,5 @@
 package main.services
 
-import com.sun.tools.javac.file.Locations
 import main.model.Location
 import scala.collection.mutable
 
@@ -29,15 +28,27 @@ object LocationHelper {
     })
   }
 
-// TODO: Test this
     def getContinentFromLocationId(locations: mutable.LinkedHashMap[String, mutable.LinkedHashMap[String, Seq[Location]]], locationId: Int): String ={
     val flattened = flattenLocations(locations)
 
     flattened.find(fl => fl.id == locationId) match {
       case Some(foundLocation) => foundLocation.continent
-      case None => ""
+      case None => throw new Exception("Error: Location Id doesn't exist")
     }
   }
 
 }
+
+// Another method of filtering a list and returning a associated Continent
+//  def getContinentByLocationId(id: Int): String ={
+//    val continents = dBAdapter.getLocations()
+//    continents.find((continent) => continent._2.values.exists(
+//      country => country.exists(
+//        location => location.id == id
+//      )
+//    )) match {
+//      case Some(result) => result._1
+//      case None => throw new Exception("Error: Location id doesn't exist")
+//    }
+//  }
 

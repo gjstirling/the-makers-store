@@ -1,5 +1,7 @@
 import main.db.{DbAdapter, DbAdapterBase}
-import main.model.{Item}
+import main.model.Item
+import main.services.LocationHelper.getContinentFromLocationId
+
 import scala.collection.mutable.ArrayBuffer
 
 class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
@@ -18,9 +20,10 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     }
   }
 
-  def getItemsByLocationId(id: Int): ArrayBuffer[Item] ={
-    val continent = getContinentByLocationId(id)
+  def getItemsByLocationId(locationId: Int): ArrayBuffer[Item] ={
+    val locations = dBAdapter.getLocations()
     val items = getAllItems()
+    val continent = getContinentFromLocationId(locations, locationId)
     val filteredItems = items.filter(item => {
       item.availableLocales.contains(continent)
     })
@@ -78,17 +81,5 @@ class ItemsController(val dBAdapter: DbAdapterBase = DbAdapter) {
     }
   }
 
-  // This needs to be moved into a "Helper or services" folder
-  private def getContinentByLocationId(id: Int): String ={
-    val continents = dBAdapter.getLocations()
-    continents.find((continent) => continent._2.values.exists(
-      country => country.exists(
-        location => location.id == id
-      )
-    )) match {
-      case Some(result) => result._1
-      case None => throw new Exception("Error: Location id doesn't exist")
-    }
-  }
 }
 
