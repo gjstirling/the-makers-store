@@ -11,13 +11,9 @@ class Cart (val uuid: String = UuidGenerator.create(),
             var order: Order = new Order()
            ){
 
-    //TO ADD:
-    //    assuming we still have enough quantity in stock
-    //      and it's available in the city we're in
     def addItem(item: Item): Unit = {
         val stock = itemsController.getItemsByLocationId(shopLocation)
         val checkStock = stock.filter(stockItem => item.id == stockItem.id)
-        println(s"\n\n ${checkStock} \n\n")
         if (checkStock == ArrayBuffer()){
             throw new Exception("Error: Item not availiable at your location")
         }
@@ -35,15 +31,19 @@ class Cart (val uuid: String = UuidGenerator.create(),
     }
 
     // remove a particular item
-        def removeItemById(itemId: Int): Unit = {
-            val filteredCart = order.items.filter(item => item.id != itemId)
-            (filteredCart.length == order.items.length) match {
-                case true => {
-                    throw new Exception("Error: ItemId not in cart")
-                }
-                case _ => {order.items = filteredCart}
+    def removeItemById(itemId: Int): Unit = {
+        val filteredCart = order.items.filter(item => item.id != itemId)
+        (filteredCart.length == order.items.length) match {
+            case true => {
+                throw new Exception("Error: ItemId not in cart")
             }
+            case _ => {order.items = filteredCart}
         }
+    }
+
+    def onPaymentFailure(): Unit ={
+        clearCart()
+    }
 }
 
 

@@ -11,14 +11,16 @@ import scala.collection.mutable.ArrayBuffer
 class CartTest extends AnyWordSpec with Matchers with MockFactory {
 
   val appleStock = new Item(1, "apple", 1.5, 3, List("EU"))
+  val coffeeStock = new Item(2, "café", 2.5, 5, List("EU"))
   val appleOrder = new Item(1, "apple", 1.5, 2, List("EU"))
   val bigAppleOrder = new Item(1, "apple", 1.5, 4, List("EU"))
-  val coffee = new Item(2, "café", 2.5, 5, List("EU"))
+  val coffeeOrder = new Item(2, "café", 2.5, 5, List("EU"))
   val cawfee = new Item(8, "cawfee", 2.5, 5, List("NA"))
-  val items = ArrayBuffer(appleOrder, coffee)
-  val cartWithItems = new Cart( "12345", 1, order = new Order(ArrayBuffer(appleOrder, coffee)))
+  val stock = ArrayBuffer(appleStock, coffeeStock)
+  val items = ArrayBuffer(appleOrder, coffeeOrder)
+  val cartWithItems = new Cart("12345", 1, order = new Order(ArrayBuffer(appleOrder, coffeeOrder)))
 
-  "A Cart should" should {
+  "A Cart Should" should {
     "Have a String UUID" in {
       val mockItemsController = mock[ItemsController]
       val cart = new Cart("12345", 1, mockItemsController)
@@ -26,7 +28,7 @@ class CartTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-  "Cart.addItem should" should {
+  "Cart.addItem" should {
     "Add an item to the cart " in {
       val mockItemsController = mock[ItemsController]
       val cart = new Cart("12345", 1, mockItemsController)
@@ -57,17 +59,7 @@ class CartTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-  "Cart.removeItemById should" should {
+  "Cart.removeItemById" should {
     "Remove an item stored inside the cart matching the id argument" in {
       cartWithItems.removeItemById(2)
       cartWithItems.order.items.length shouldBe 1
@@ -82,10 +74,24 @@ class CartTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-  "Cart.clearCart should" should {
+  "Cart.clearCart" should {
     "Remove all items stored inside the cart" in {
-      cartWithItems.clearCart()
+      cartWithItems.clearCart
       cartWithItems.order.items.length shouldBe 0
     }
   }
+
+//  "Cart.onPaymentSuccess" should {
+//    "Update the inventory" in {
+//      // update item by subtracting quantity of each item
+//      // send updated items back to DB
+//    }
+
+    // Repeated behaviour ??
+    "Cart.onPaymentFailure should" should {
+      "Empty the cart" in {
+        cartWithItems.onPaymentFailure
+        cartWithItems.order.items.length shouldBe 0
+      }
+    }
 }
