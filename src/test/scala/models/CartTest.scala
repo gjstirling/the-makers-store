@@ -1,31 +1,61 @@
 package models
+import controllers.ItemsController
 import main.model.Item
 import model.{Cart, Order}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
 import scala.collection.mutable.ArrayBuffer
 
 class CartTest extends AnyWordSpec with Matchers with MockFactory {
 
-  val apple = new Item(1, "apple", 1.5, 1, List("EU"))
+  val appleStock = new Item(1, "apple", 1.5, 3, List("EU"))
+  val appleOrder = new Item(1, "apple", 1.5, 2, List("EU"))
+  val bigAppleOrder = new Item(1, "apple", 1.5, 4, List("EU"))
+
   val coffee = new Item(2, "cawfee", 2.5, 5, List("EU", "NA"))
-  val emptyCart = new Cart()
-  val cartWithItems = new Cart(order = new Order(ArrayBuffer(apple, coffee)))
+  val items = ArrayBuffer(appleOrder, coffee)
+  val cartWithItems = new Cart(order = new Order(ArrayBuffer(appleOrder, coffee)))
 
   "A Cart should" should {
-    "Have a UUID" in {
-      emptyCart.uuid shouldBe a[String]
+    "Have a String UUID" in {
+      val mockItemsController = mock[ItemsController]
+      val cart = new Cart("12345", mockItemsController)
+      cart.uuid shouldBe a[String]
     }
   }
 
   "Cart.addItem should" should {
     "Add an item to the cart " in {
-      emptyCart.addItem(apple)
-      emptyCart.order.items.length shouldBe 1
-      emptyCart.order.items(0).name shouldEqual "apple"
+      val mockItemsController = mock[ItemsController]
+      (mockItemsController.getAllItems _).expects().returns(items)
+      val cart = new Cart("12345", mockItemsController)
+      cart.addItem(appleOrder)
+      cart.order.items.length shouldBe 1
+      cart.order.items(0).name shouldEqual "apple"
+    }
+
+    "Return an error if quantity ordered is greater than stock" in {
+      val mockItemsController = mock[ItemsController]
+      (mockItemsController.getAllItems _).expects().returns(items)
+      val cart = new Cart("12345", mockItemsController)
+      val thrownError = the[Exception] thrownBy {
+        cart.addItem(bigAppleOrder)
+      }
+      thrownError.getMessage should equal("Error: Not enough stock of item")
     }
   }
+
+
+
+
+
+
+
+
+
+
 
   "Cart.removeItemById should" should {
     "Remove an item stored inside the cart matching the id argument" in {

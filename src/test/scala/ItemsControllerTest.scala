@@ -1,3 +1,4 @@
+import controllers.ItemsController
 import main.db.DbAdapterBase
 import main.model.{Item, Location}
 import org.scalamock.scalatest.MockFactory
@@ -33,7 +34,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
 
   // CREATE routes:
   // returning a Unit confirms this is behaving correctly ? As only other return is a raised exception
-  "ItemsController.createItem" should {
+  "controllers.ItemsController.createItem" should {
     "Create a new item" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1)
@@ -57,7 +58,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
   }
 
   // GET route tests:
-  "ItemsController.getAll" should {
+  "controllers.ItemsController.getAll" should {
     "Return an ArrayBuffer of items" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1, item2)
@@ -69,7 +70,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-  "ItemsController.getItemById" should {
+  "controllers.ItemsController.getItemById" should {
     "Return a single item" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1, item2)
@@ -115,7 +116,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
   }
 
   // DELETE Routes:
-  "ItemsController.deleteItem" should {
+  "controllers.ItemsController.deleteItem" should {
     "Delete an item" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1, item2)
@@ -136,7 +137,7 @@ class ItemsControllerTest extends AnyWordSpec with Matchers with MockFactory {
     }
   }
 
-  "ItemsController.getItemsByLocationId" should {
+  "controllers.ItemsController.getItemsByLocationId" should {
     "Return a list of items based on a location id" in {
       val mockDbAdapter = mock[DbAdapterBase]
       val items = ArrayBuffer(item1, item2)

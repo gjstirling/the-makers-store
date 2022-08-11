@@ -1,18 +1,28 @@
 package model
-import main.db.{DbAdapter, DbAdapterBase}
+import controllers.ItemsController
 import main.model.Item
 import services.UuidGenerator
 
+
 class Cart (val uuid: String = UuidGenerator.create(),
-            val dBAdapter: DbAdapterBase = DbAdapter,
-            var order: Order = new Order()) {
+            val itemsController: ItemsController = new ItemsController,
+            var order: Order = new Order()
+           ){
 
     //TO ADD:
     //    assuming we still have enough quantity in stock
     //      and it's available in the city we're in
     def addItem(item: Item): Unit = {
-
-        order.items.append(item)
+        val stock = itemsController.getAllItems()
+        val checkStock = stock.filter(stockItem => item.id == stockItem.id)
+        if (checkStock(0).quantity < item.quantity){
+            throw new Exception("Error: Not enough stock of item")
+        }
+        else {
+            order.items.append(item)
+        }
+        // filter stock so that only item that matches id exists
+        // confirm quantity of stock is greater than or equal to quantity being added
     }
 
     //    Cart also allows us to clear its contents entirely
@@ -34,5 +44,6 @@ class Cart (val uuid: String = UuidGenerator.create(),
     //    We can change the quantity of an item already in our cart,
     //    so long as the new quantity is in stock
 }
+
 
 

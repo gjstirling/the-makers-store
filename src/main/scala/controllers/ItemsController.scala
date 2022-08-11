@@ -1,3 +1,5 @@
+package controllers
+
 import main.db.{DbAdapter, DbAdapterBase}
 import main.model.Item
 import main.services.LocationHelper.getContinentFromLocationId
