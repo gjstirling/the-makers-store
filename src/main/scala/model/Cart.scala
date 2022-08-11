@@ -3,8 +3,10 @@ import controllers.ItemsController
 import main.model.Item
 import services.UuidGenerator
 
+import scala.collection.mutable.ArrayBuffer
 
 class Cart (val uuid: String = UuidGenerator.create(),
+            val shopLocation: Int,
             val itemsController: ItemsController = new ItemsController,
             var order: Order = new Order()
            ){
@@ -13,16 +15,18 @@ class Cart (val uuid: String = UuidGenerator.create(),
     //    assuming we still have enough quantity in stock
     //      and it's available in the city we're in
     def addItem(item: Item): Unit = {
-        val stock = itemsController.getAllItems()
+        val stock = itemsController.getItemsByLocationId(shopLocation)
         val checkStock = stock.filter(stockItem => item.id == stockItem.id)
-        if (checkStock(0).quantity < item.quantity){
+        println(s"\n\n ${checkStock} \n\n")
+        if (checkStock == ArrayBuffer()){
+            throw new Exception("Error: Item not availiable at your location")
+        }
+        else if (checkStock(0).quantity < item.quantity){
             throw new Exception("Error: Not enough stock of item")
         }
         else {
             order.items.append(item)
         }
-        // filter stock so that only item that matches id exists
-        // confirm quantity of stock is greater than or equal to quantity being added
     }
 
     //    Cart also allows us to clear its contents entirely
@@ -40,9 +44,6 @@ class Cart (val uuid: String = UuidGenerator.create(),
                 case _ => {order.items = filteredCart}
             }
         }
-
-    //    We can change the quantity of an item already in our cart,
-    //    so long as the new quantity is in stock
 }
 
 

@@ -3,6 +3,8 @@ import main.model.Location
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import services.{FlatLocation, LocationHelper}
+
 import scala.collection.mutable
 
 class LocationHelperTest extends AnyWordSpec with Matchers with MockFactory {

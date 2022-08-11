@@ -1,6 +1,7 @@
-package main.services
+package services
 
 import main.model.Location
+
 import scala.collection.mutable
 
   case class FlatLocation(id: Int, name: String, region: String, continent: String)

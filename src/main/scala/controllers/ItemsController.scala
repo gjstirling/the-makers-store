@@ -2,7 +2,7 @@ package controllers
 
 import main.db.{DbAdapter, DbAdapterBase}
 import main.model.Item
-import main.services.LocationHelper.getContinentFromLocationId
+import services.LocationHelper.getContinentFromLocationId
 
 import scala.collection.mutable.ArrayBuffer
 
