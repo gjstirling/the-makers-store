@@ -9,33 +9,35 @@ import scala.collection.mutable
 object LocationHelper {
 
   def flattenLocations(locations: mutable.LinkedHashMap[String, mutable.LinkedHashMap[String, Seq[Location]]]): List[FlatLocation] ={
-    val test = locations.foldLeft(List[FlatLocation]())((outputList, hMapOfRegion) => {
+    locations.foldLeft(List[FlatLocation]())((outputList, hMapOfRegion) => {
       val (continent, regionMap) = hMapOfRegion
 
       //INPUT: LinkedHashMap[String, Seq[Location]]
-      //OUTPUT: List[Location]
-//      println(s"${continent}\n")
-//      println(s"${regionMap}\n")
+      //      println(s"${continent}\n")
+      //      println(s"${regionMap}\n")
 
       outputList ++ regionMap.foldLeft(List[FlatLocation]())((subList, hMapOfLocation)=> {
         val (region, locationSeq) = hMapOfLocation
 
-//        println(s"${region}\n")
-//        println(s"${locationSeq}\n")
-
+      //        println(s"${region}\n")
+      //        println(s"${locationSeq}\n")
+        // OUTPUT: List[FlatLocation]
         subList ++ locationSeq.map(l => {
           FlatLocation(l.id, l.name, region, continent)
         }).toList
       })
     })
-    println(test)
-    List()
   }
 
+// TODO: Test this
+    def getContinentFromLocationId(locations: mutable.LinkedHashMap[String, mutable.LinkedHashMap[String, Seq[Location]]], locationId: Int): String ={
+    val flattened = flattenLocations(locations)
 
-//  def getContinentFromLocationId(locations: mutable.LinkedHashMap[String, mutable.LinkedHashMap[String, Seq[Location]]], locationId: Int): String ={
-//    ""
-//  }
+    flattened.find(fl => fl.id == locationId) match {
+      case Some(foundLocation) => foundLocation.continent
+      case None => ""
+    }
+  }
 
 }
 
