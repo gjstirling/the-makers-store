@@ -44,6 +44,29 @@ class Cart (val uuid: String = UuidGenerator.create(),
     def onPaymentFailure(): Unit ={
         clearCart()
     }
+
+    def onPaymentSuccess(): ArrayBuffer[Item] = {
+        val stock = itemsController.getItemsByLocationId(shopLocation)
+        val itemsBought = order.items
+        val newItems = stock.map(item => {
+            val findItem = itemsBought.filter(orderItem => item.id == orderItem.id)
+            findItem(0).quantity
+            val updatedQuantity = Option(item.quantity - findItem(0).quantity)
+            val result = itemsController.updateItemById(item.id, quantity = updatedQuantity)
+            println("result", result)
+            result
+        })
+        newItems
+    }
+
+//    val stockTransform = stock.map( item => {
+//        Map.apply("id" -> item.id, "quantity" -> item.quantity)
+//    })
+//    println(stockTransform)
+//    val itemsTransform = itemsBought.map( item => {
+//        Map.apply("id" -> item.id, "quantity" -> item.quantity)
+//    })
+//    println(itemsTransform)
 }
 
 
